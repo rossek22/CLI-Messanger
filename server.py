@@ -9,6 +9,16 @@ from config import SECRET_KEY, SERVER_PORT
 HOST = '0.0.0.0'
 clients = []
 
+def get_local_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except:
+        return "127.0.0.1"
+
 print("KEY BYTES =", SECRET_KEY, "LEN =", len(SECRET_KEY))
 assert len(SECRET_KEY) == 32, "Ключ НЕ 32 байта!"
 
@@ -53,7 +63,7 @@ def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((HOST, SERVER_PORT))
     server.listen()
-    print(f"[SERVER] Запущен на {HOST}:{SERVER_PORT}")
+    print(f"[SERVER] Запущен на {get_local_ip()}:{SERVER_PORT}")
 
     while True:
         conn, addr = server.accept()
